@@ -10,6 +10,7 @@ import {
 import { PiPlusThin } from "react-icons/pi";
 import Board from "../../components/board";
 import Modal from "../../components/modal";
+import FormCreateColumn from "../../components/forms/formCreateColumn";
 
 export default function Kanban() {
   const [dropdown, setDropdown] = useState(false);
@@ -23,16 +24,24 @@ export default function Kanban() {
             <PiPlusThin size={25} />
           </Button>
           <DropDownOptions
-            opacity={dropdown}
+            show={dropdown}
             onMouseLeave={() => setDropdown(false)}
           >
-            <Option onClick={() => setModal("column")}>Criar coluna</Option>
-            <Option onClick={() => setModal("task")}>Criar tarefa</Option>
+            <Option show={dropdown} onClick={() => setModal("column")}>
+              Criar coluna
+            </Option>
+            <Option show={dropdown} onClick={() => setModal("task")}>
+              Criar tarefa
+            </Option>
           </DropDownOptions>
         </DivRow>
         <Board />
       </Container>
-      {modal === "column" && <Modal setModal={setModal}></Modal>}
+      {modal === "column" && (
+        <Modal setModal={setModal}>
+          <FormCreateColumn />
+        </Modal>
+      )}
     </>
   );
 }

@@ -16,9 +16,22 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
 
-  min-width: 200px;
+  min-width: 250px;
+
+  padding: 5px;
 
   gap: 10px;
+`;
+
+export const ContainerCards = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  height: 100%;
+
+  border: ${(props) => (props.border ? "" : "1px dashed #ccc")};
+  border-radius: 5px;
 `;
 
 export const TitleColumn = styled.p`
@@ -84,4 +97,10 @@ export const ContainerActions = styled.div`
 
   width: 100%;
   margin-top: 15px;
+`;
+
+export const ContainerIcon = styled.div`
+  cursor: pointer;
+
+  color: red;
 `;

@@ -45,7 +45,16 @@ export class ColumnController {
 
       await columnRepository.save(newColumn);
 
-      return res.status(201).json(newColumn);
+      const column = await columnRepository.find({
+        where: {
+          name: name,
+        },
+        relations: {
+          tasks: true,
+        },
+      });
+
+      return res.status(201).json(column);
     } catch (err) {
       console.log(err);
       return res.status(500).json({ message: "Internal server error" });

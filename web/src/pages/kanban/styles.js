@@ -49,16 +49,19 @@ export const DropDownOptions = styled.div`
   background-color: #fff;
 
   width: 120px;
-  box-shadow: 0 0 10px #0002;
+  height: ${(props) => (props.show ? "auto" : "0px")};
+  box-shadow: ${(props) => (props.show ? " 0 0 10px #0002" : "unset")};
 
-  padding: 5px;
+  overflow: ${(props) => (props.show ? "auto" : "hidden")};
+
+  padding: ${(props) => (props.show ? "5px" : "0px")};
   border-radius: 5px;
 
   position: absolute;
   right: -10px;
   top: 50px;
 
-  opacity: ${(props) => (props.opacity ? "1" : "0")};
+  opacity: ${(props) => (props.show ? "1" : "0")};
 
   transition: 0.2s;
 
@@ -69,13 +72,16 @@ export const DropDownOptions = styled.div`
 
 export const Option = styled.p`
   width: 100%;
+  height: ${(props) => (props.show ? "auto" : "0")};
 
-  padding: 5px 7px;
+  padding: ${(props) => (props.show ? "5px 7px" : "0")};
 
   font-size: 12px;
   cursor: pointer;
 
   background-color: #fff;
+
+  opacity: ${(props) => (props.show ? "1" : "0")};
 
   border-radius: 5px;
 `;

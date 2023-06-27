@@ -1,10 +1,10 @@
 import { ContainerModal, ContentForm, Overlay } from "./styles";
 
-export default function Modal({ setModal }) {
+export default function Modal({ setModal, children }) {
   return (
     <ContainerModal>
       <Overlay onClick={() => setModal(false)} />
-      <ContentForm />
+      <ContentForm>{children}</ContentForm>
     </ContainerModal>
   );
 }
