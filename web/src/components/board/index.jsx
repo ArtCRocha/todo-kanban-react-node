@@ -1,26 +1,17 @@
-import {
-  ContainerColumns,
-  Column,
-  TitleColumn,
-  CountColumn,
-  Card,
-  TitleCard,
-  DescriptionCard,
-  ContainerActions,
-  ContainerCards,
-  ContainerIcon,
-} from "./styles";
-import { BiEditAlt } from "react-icons/bi";
-import { BsTrash } from "react-icons/bs";
+import { ContainerColumns } from "./styles";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllColumns } from "../../services/api/column";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import http from "../../services/http";
-import { DivRow } from "../../pages/kanban/styles";
 import { useState } from "react";
 import Modal from "../modal";
 import FormDeleteColumn from "../forms/formDeleteColumn";
+import ColumnComponent from "./column";
 
+let movedColumn = "";
+let overColumn = "";
+let movedColIndex = "";
+let overColIndex = "";
 export default function Board() {
   const [modal, setModal] = useState();
   const columns = useQuery({
@@ -63,65 +54,50 @@ export default function Board() {
     });
   }
 
+  function onDragStart(e, item) {
+    e.stopPropagation();
+    movedColumn = item;
+  }
+
+  function onDragOver(e) {
+    e.preventDefault();
+  }
+
+  function onDrop(e, item) {
+    e.preventDefault();
+    overColumn = item;
+
+    client.setQueriesData({ queryKey: ["columns"] }, (prev) => {
+      let old = [...prev];
+
+      movedColIndex = old.findIndex((x) => x.id === movedColumn.id);
+      overColIndex = old.findIndex((x) => x.id === overColumn.id);
+
+      old[movedColIndex] = overColumn;
+      old[overColIndex] = movedColumn;
+
+      return old;
+    });
+  }
+
   return (
     <>
       <ContainerColumns>
         <DragDropContext onDragEnd={onDragEnd}>
           {columns?.data?.map((column) => {
             return (
-              <Droppable droppableId={`${column?.id}`} key={column?.id}>
-                {(provided) => (
-                  <Column>
-                    <DivRow>
-                      <TitleColumn>
-                        {column?.name}{" "}
-                        <CountColumn>{column?.tasks?.length}</CountColumn>
-                      </TitleColumn>
-                      <ContainerIcon
-                        onClick={() =>
-                          setModal({ name: "deleteColumn", data: column })
-                        }
-                      >
-                        <BsTrash size={17} color="red" />
-                      </ContainerIcon>
-                    </DivRow>
-                    <ContainerCards
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      border={column.tasks?.length > 0}
-                    >
-                      {column?.tasks?.map((task, index) => {
-                        return (
-                          <Draggable
-                            draggableId={`${task.id}`}
-                            key={`${task.id}`}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <Card
-                                {...provided.dragHandleProps}
-                                {...provided.draggableProps}
-                                ref={provided.innerRef}
-                              >
-                                <TitleCard>{task.name}</TitleCard>
-                                <DescriptionCard>
-                                  {task.description}
-                                </DescriptionCard>
-                                <ContainerActions>
-                                  <BiEditAlt size={20} color="red" />
-                                  <BsTrash size={17} color="red" />
-                                </ContainerActions>
-                                {provided.placeholder}
-                              </Card>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </ContainerCards>
-                  </Column>
-                )}
-              </Droppable>
+              <ColumnComponent
+                onDragStart={(e) => {
+                  onDragStart(e, column);
+                }}
+                onDragOver={(e) => onDragOver(e)}
+                onDrop={(e) => {
+                  if (movedColumn) {
+                    onDrop(e, column);
+                  }
+                }}
+                column={column}
+              />
             );
           })}
         </DragDropContext>
