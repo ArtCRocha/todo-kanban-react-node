@@ -9,6 +9,7 @@ import FormDeleteColumn from "../forms/formDeleteColumn";
 import ColumnComponent from "./column";
 
 let movedItem = "";
+let overItem = "";
 export default function Board() {
   const [modal, setModal] = useState();
   const columns = useQuery({
@@ -32,6 +33,7 @@ export default function Board() {
     }
 
     if (type === "tasks") {
+      // verificar se são colunas diferentes
       client.setQueryData(
         { queryKey: ["tasks", parseInt(source.droppableId)] },
         (prev) => {
@@ -41,16 +43,31 @@ export default function Board() {
         }
       );
 
-      client.setQueryData(
-        { queryKey: ["tasks", parseInt(destination.droppableId)] },
-        (prev) => {
-          let old = prev;
-          movedItem.status = destination.droppableId;
-          old.splice(destination.index, 0, movedItem);
-          return old;
-        }
-      );
+      if (movedItem) {
+        client.setQueryData(
+          { queryKey: ["tasks", parseInt(destination.droppableId)] },
+          (prev) => {
+            let old = prev;
 
+            movedItem.status = destination.droppableId;
+            old.splice(destination.index, 0, movedItem);
+
+            overItem = old[source.index];
+
+            if (source.draggableId === destination.draggableId) {
+              let actualOrderMovedItem = movedItem.order;
+              let actualOrderOverItem = overItem.order;
+
+              old[source.index].order = actualOrderMovedItem;
+              old[destination.index].order = actualOrderOverItem;
+            }
+
+            return old;
+          }
+        );
+      }
+
+      // Mandar id do overItem pelo endpoint e mudar a order do overItem para a order do movedItem na api
       http.patch(`/tasks/${draggableId}`, {
         status: destination.droppableId,
         column: destination.droppableId,

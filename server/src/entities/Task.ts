@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -26,4 +27,8 @@ export class Task {
   })
   @JoinColumn({ name: "column" })
   column: ColumnEntity;
+
+  @Column()
+  @Generated("increment")
+  order: number;
 }

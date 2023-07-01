@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Generated,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Task } from "./Task";
 
 @Entity("columns")
@@ -11,4 +17,8 @@ export class ColumnEntity {
 
   @OneToMany(() => Task, (task) => task.column)
   tasks: Task[];
+
+  @Column()
+  @Generated("increment")
+  order: number;
 }

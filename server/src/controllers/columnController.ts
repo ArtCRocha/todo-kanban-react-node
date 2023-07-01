@@ -7,9 +7,10 @@ export class ColumnController {
       select: {
         id: true,
         name: true,
+        order: true,
       },
-      relations: {
-        tasks: true,
+      order: {
+        order: "ASC",
       },
     });
 
@@ -62,11 +63,11 @@ export class ColumnController {
   }
 
   async updateColumn(req: Request, res: Response) {
-    const { name } = req.body;
+    const { name, order } = req.body;
     const { id } = req.params;
 
     try {
-      await columnRepository.update(id, { name });
+      await columnRepository.update(id, { name, order });
 
       const columnUpdated = await columnRepository.findOneBy({
         id: Number(id),

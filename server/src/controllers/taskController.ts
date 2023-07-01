@@ -9,6 +9,9 @@ export class TaskController {
       where: {
         status: id,
       },
+      order: {
+        order: "ASC",
+      },
     });
 
     try {
@@ -56,11 +59,17 @@ export class TaskController {
   }
 
   async updatetask(req: Request, res: Response) {
-    const { name, description, status, column } = req.body;
+    const { name, description, status, column, order } = req.body;
     const { id } = req.params;
 
     try {
-      await taskRepository.update(id, { name, description, status, column });
+      await taskRepository.update(id, {
+        name,
+        description,
+        status,
+        column,
+        order,
+      });
 
       const taskUpdated = await taskRepository.findOneBy({
         id: Number(id),
