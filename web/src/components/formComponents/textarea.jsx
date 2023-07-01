@@ -1,10 +1,10 @@
-import { Label, TextareaStyle } from "./styles";
+import { InputGroup, Label, TextareaStyle } from "./styles";
 import { Field } from "formik";
 
 export default function Textarea({ label, name, placeHolder }) {
   return (
     <Field name={name} placeholder={placeHolder}>
-      {(field, form, meta) => (
+      {({ field, form, meta }) => (
         <InputGroup>
           <Label>{label}</Label>
           <TextareaStyle

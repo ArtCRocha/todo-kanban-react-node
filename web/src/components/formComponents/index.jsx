@@ -5,9 +5,16 @@ import Textarea from "./textarea";
 import Select from "./select";
 import ButtonSubmit from "./buttonSubmit";
 
-export default function Form({ children, onSubmit, data, validationSchema }) {
+export default function Form({
+  children,
+  onSubmit,
+  data,
+  validationSchema,
+  innerRef,
+}) {
   return (
     <Formik
+      innerRef={innerRef}
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}

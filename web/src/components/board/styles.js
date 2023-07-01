@@ -21,8 +21,6 @@ export const Column = styled.div`
   padding: 5px;
 
   gap: 10px;
-
-  cursor: move;
 `;
 
 export const ContainerCards = styled.div`

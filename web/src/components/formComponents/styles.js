@@ -46,6 +46,8 @@ export const TextareaStyle = styled.textarea`
   border: 1px solid #e1e1e1;
 
   color: #2a2a2a;
+
+  outline: none;
 `;
 
 export const SelectStyle = styled.select`
@@ -57,6 +59,8 @@ export const SelectStyle = styled.select`
   border: 1px solid #e1e1e1;
 
   color: #2a2a2a;
+
+  outline: none;
 `;
 
 export const ButtonSubmitStyle = styled.button`
@@ -72,4 +76,8 @@ export const ButtonSubmitStyle = styled.button`
 
   color: #fff;
   cursor: pointer;
+`;
+
+export const Option = styled.option`
+  font-size: 12px;
 `;

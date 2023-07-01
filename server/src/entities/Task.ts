@@ -19,7 +19,7 @@ export class Task {
   description: string;
 
   @Column()
-  status: number;
+  status: string;
 
   @ManyToOne(() => ColumnEntity, (column) => column.tasks, {
     onDelete: "CASCADE",

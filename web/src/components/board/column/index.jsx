@@ -1,4 +1,4 @@
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import {
   Column,
   ContainerCards,
@@ -9,44 +9,79 @@ import {
 import { DivRow } from "../../../pages/kanban/styles";
 import { BsTrash } from "react-icons/bs";
 import TaskComponent from "../task";
+import { useQuery } from "@tanstack/react-query";
+import { getAllTasks } from "../../../services/api/tasks";
+import { useState } from "react";
+import Modal from "../../modal";
+import FormDeleteColumn from "../../forms/formDeleteColumn";
 
-export default function ColumnComponent({
-  column,
-  onDragStart,
-  onDragOver,
-  onDrop,
-}) {
+export default function ColumnComponent({ column, index }) {
+  const [modal, setModal] = useState(false);
+
+  const { data } = useQuery({
+    queryKey: ["tasks", column?.id],
+    queryFn: getAllTasks,
+    retry: false,
+    refetchOnMount: false,
+    retryOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
   return (
-    <Droppable droppableId={`${column?.id}`}>
-      {(provided) => (
-        <Column
-          onDragStart={onDragStart}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
-          draggable
-        >
-          <DivRow>
-            <TitleColumn>
-              {column?.name} <CountColumn>{column?.tasks?.length}</CountColumn>
-            </TitleColumn>
-            <ContainerIcon
-              onClick={() => setModal({ name: "deleteColumn", data: column })}
-            >
-              <BsTrash size={17} color="red" />
-            </ContainerIcon>
-          </DivRow>
-          <ContainerCards
+    <>
+      <Draggable
+        key={`${column?.id}`}
+        draggableId={`${column?.id}`}
+        index={index}
+      >
+        {(provided) => (
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
             ref={provided.innerRef}
-            {...provided.droppableProps}
-            border={column.tasks?.length > 0}
           >
-            {column?.tasks?.map((task, index) => {
-              return <TaskComponent task={task} index={index} />;
-            })}
+            <Droppable
+              key={`${column?.id}`}
+              droppableId={`${column?.id}`}
+              index={index}
+              type="tasks"
+            >
+              {(provided) => (
+                <Column>
+                  <DivRow>
+                    <TitleColumn>
+                      {column?.name} <CountColumn>{data?.length}</CountColumn>
+                    </TitleColumn>
+                    <ContainerIcon
+                      onClick={() =>
+                        setModal({ name: "deleteColumn", data: column })
+                      }
+                    >
+                      <BsTrash size={17} color="red" />
+                    </ContainerIcon>
+                  </DivRow>
+                  <ContainerCards
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    border={column.tasks?.length > 0}
+                  >
+                    {data?.map((task, index) => {
+                      return <TaskComponent task={task} index={index} />;
+                    })}
+                    {provided.placeholder}
+                  </ContainerCards>
+                </Column>
+              )}
+            </Droppable>
             {provided.placeholder}
-          </ContainerCards>
-        </Column>
+          </div>
+        )}
+      </Draggable>
+      {modal?.name === "deleteColumn" && (
+        <Modal setModal={setModal}>
+          <FormDeleteColumn data={modal?.data} setModal={setModal} />
+        </Modal>
       )}
-    </Droppable>
+    </>
   );
 }

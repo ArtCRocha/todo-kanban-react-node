@@ -11,6 +11,7 @@ import { PiPlusThin } from "react-icons/pi";
 import Board from "../../components/board";
 import Modal from "../../components/modal";
 import FormCreateColumn from "../../components/forms/formCreateColumn";
+import FormCreateTask from "../../components/forms/formCreateTask";
 
 export default function Kanban() {
   const [dropdown, setDropdown] = useState(false);
@@ -40,6 +41,12 @@ export default function Kanban() {
       {modal === "column" && (
         <Modal setModal={setModal}>
           <FormCreateColumn />
+        </Modal>
+      )}
+
+      {modal === "task" && (
+        <Modal setModal={setModal}>
+          <FormCreateTask />
         </Modal>
       )}
     </>

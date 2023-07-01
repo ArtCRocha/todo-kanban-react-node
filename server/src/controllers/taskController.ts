@@ -3,15 +3,11 @@ import { taskRepository } from "../repositories/taskRepository";
 
 export class TaskController {
   async allTasks(req: Request, res: Response) {
+    const { id } = req.params;
+
     const tasks = await taskRepository.find({
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        status: true,
-      },
-      relations: {
-        column: true,
+      where: {
+        status: id,
       },
     });
 
