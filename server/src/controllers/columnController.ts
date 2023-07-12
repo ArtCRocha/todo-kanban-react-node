@@ -63,11 +63,51 @@ export class ColumnController {
   }
 
   async updateColumn(req: Request, res: Response) {
-    const { name, order } = req.body;
+    const { name } = req.body;
     const { id } = req.params;
 
     try {
-      await columnRepository.update(id, { name, order });
+      await columnRepository.update(id, { name });
+
+      const columnUpdated = await columnRepository.findOneBy({
+        id: Number(id),
+      });
+
+      return res.status(200).json(columnUpdated);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async changeOrder(req: Request, res: Response) {
+    const { order } = req.body;
+    const { id } = req.params;
+
+    try {
+      const sourceColumn = await columnRepository.findOneBy({
+        id: Number(id),
+      });
+
+      if (!sourceColumn) {
+        return res.status(404).json({ message: "Coluna não encontrada" });
+      }
+
+      const destinationColumn = await columnRepository.findOneBy({ order });
+
+      if (!destinationColumn) {
+        return res
+          .status(404)
+          .json({ message: "Coluna de destino não encontrada" });
+      }
+
+      const oldOrder = sourceColumn.order;
+
+      sourceColumn.order = order;
+      await columnRepository.save(sourceColumn);
+
+      destinationColumn.order = oldOrder;
+      await columnRepository.save(destinationColumn);
 
       const columnUpdated = await columnRepository.findOneBy({
         id: Number(id),

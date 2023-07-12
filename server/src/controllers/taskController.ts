@@ -63,12 +63,39 @@ export class TaskController {
     const { id } = req.params;
 
     try {
+      const sourceTask = await taskRepository.findOneBy({
+        id: Number(id),
+      });
+
+      if (!sourceTask) {
+        return res.status(404).json({ message: "Tarefa não encontrada" });
+      }
+
+      const destinationTask = await taskRepository.findOneBy({
+        order,
+      });
+
+      if (!destinationTask) {
+        return res
+          .status(404)
+          .json({ message: "Tarefa de destino não encontrada" });
+      }
+
+      console.log(sourceTask.order, destinationTask.order);
+
+      const oldOrder = sourceTask.order;
+
+      sourceTask.order = order;
+      await taskRepository.save(sourceTask);
+
+      destinationTask.order = oldOrder;
+      await taskRepository.save(destinationTask);
+
       await taskRepository.update(id, {
         name,
         description,
         status,
         column,
-        order,
       });
 
       const taskUpdated = await taskRepository.findOneBy({
