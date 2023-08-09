@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { columnRepository } from "../repositories/columnRepository";
+import { ColumnEntity } from "../entities/Columns";
 
 export class ColumnController {
   async allColumns(req: Request, res: Response) {
@@ -81,39 +82,26 @@ export class ColumnController {
   }
 
   async changeOrder(req: Request, res: Response) {
-    const { order } = req.body;
-    const { id } = req.params;
+    const { id, destination_index } = req.body;
 
     try {
-      const sourceColumn = await columnRepository.findOneBy({
-        id: Number(id),
-      });
+      const columns = await columnRepository.find({ order: { order: "ASC" } });
 
-      if (!sourceColumn) {
-        return res.status(404).json({ message: "Coluna não encontrada" });
+      const column = columns.find((x) => x.id === id);
+
+      if (column) {
+        columns.splice(columns.indexOf(column), 1);
+
+        columns.splice(destination_index, 0, column);
+
+        columns.forEach((item, index) => {
+          item.order = index + 1;
+        });
+
+        await columnRepository.save(columns);
+
+        return res.status(200).json(columns);
       }
-
-      const destinationColumn = await columnRepository.findOneBy({ order });
-
-      if (!destinationColumn) {
-        return res
-          .status(404)
-          .json({ message: "Coluna de destino não encontrada" });
-      }
-
-      const oldOrder = sourceColumn.order;
-
-      sourceColumn.order = order;
-      await columnRepository.save(sourceColumn);
-
-      destinationColumn.order = oldOrder;
-      await columnRepository.save(destinationColumn);
-
-      const columnUpdated = await columnRepository.findOneBy({
-        id: Number(id),
-      });
-
-      return res.status(200).json(columnUpdated);
     } catch (err) {
       console.log(err);
       return res.status(500).json({ message: "Internal server error" });

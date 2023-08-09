@@ -26,6 +26,7 @@ export const Column = styled.div`
 export const ContainerCards = styled.div`
   display: flex;
   flex-direction: column;
+  min-height: calc(100vh - 200px);
   gap: 10px;
 
   height: 100%;

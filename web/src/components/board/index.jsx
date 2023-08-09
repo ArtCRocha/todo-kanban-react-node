@@ -9,10 +9,11 @@ import FormDeleteColumn from "../forms/formDeleteColumn";
 import ColumnComponent from "./column";
 
 let movedItem;
+let itemIndex;
 let overItem;
 let sourceCol;
 let destinationCol;
-let order;
+let newColumnOrder;
 export default function Board() {
   const [modal, setModal] = useState();
   const columns = useQuery({
@@ -35,25 +36,19 @@ export default function Board() {
       client.setQueryData({ queryKey: ["columns"] }, (prev) => {
         let old = prev;
 
-        sourceCol = old[source.index];
-        destinationCol = old[destination.index];
+        movedItem = old.splice(source.index, 1)[0];
 
-        let sourceColOrder = sourceCol?.order;
+        old.splice(destination.index, 0, movedItem);
 
-        sourceCol.order = destinationCol.order;
-        destinationCol.order = sourceColOrder;
-
-        old[source.index] = destinationCol;
-        old[destination.index] = sourceCol;
-
-        order = old[destination.index].order;
+        newColumnOrder = old;
 
         return old;
       });
 
       try {
-        await http.patch(`/columns/order/${draggableId}/`, {
-          order: order,
+        await http.post(`/columns/order/`, {
+          id: parseInt(draggableId),
+          destination_index: destination.index,
         });
       } catch {
         console.log("Error");
@@ -61,17 +56,14 @@ export default function Board() {
     }
 
     if (type === "tasks") {
-      if (source.droppableId !== destination.droppableId) {
-        client.setQueryData(
-          { queryKey: ["tasks", parseInt(source.droppableId)] },
-          (prev) => {
-            let old = prev;
-            movedItem = old.splice(source.index, 1)[0];
-            return old;
-          }
-        );
-      }
-
+      client.setQueryData(
+        { queryKey: ["tasks", parseInt(source.droppableId)] },
+        (prev) => {
+          let old = prev;
+          movedItem = old.splice(source.index, 1)[0];
+          return old;
+        }
+      );
       client.setQueryData(
         { queryKey: ["tasks", parseInt(destination.droppableId)] },
         (prev) => {
@@ -80,37 +72,18 @@ export default function Board() {
           if (movedItem) {
             movedItem.status = destination.droppableId;
 
-            
             old.splice(destination.index, 0, movedItem);
-
-            movedItem = "";
-
-            console.log(old);
-          } else {
-            let sourceTask = old[source.index];
-            let destinationTask = old[destination.index];
-
-            let sourceTaskOrder = sourceTask?.order;
-
-            sourceTask.order = destinationTask.order;
-            destinationTask.order = sourceTaskOrder;
-
-            old[source.index] = destinationTask;
-            old[destination.index] = sourceTask;
-
-            order = old[destination.index].order;
-
-            console.log(old);
           }
 
           return old;
         }
       );
 
-      http.patch(`/tasks/${draggableId}`, {
-        status: destination.droppableId,
-        column: destination.droppableId,
-        order: order,
+      http.post(`/tasks/order`, {
+        id: parseInt(draggableId),
+        source_status: source.droppableId,
+        destination_index: destination.index,
+        destination_status: destination.droppableId,
       });
     }
   }

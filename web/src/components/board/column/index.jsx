@@ -27,6 +27,8 @@ export default function ColumnComponent({ column, index }) {
     refetchOnWindowFocus: false,
   });
 
+  console.log(data);
+
   return (
     <>
       <Draggable
@@ -63,7 +65,7 @@ export default function ColumnComponent({ column, index }) {
                   <ContainerCards
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    border={column.tasks?.length > 0}
+                    border={data?.length > 0}
                   >
                     {data?.map((task, index) => {
                       return <TaskComponent task={task} index={index} />;
