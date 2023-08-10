@@ -20,7 +20,7 @@ export class Task {
   description: string;
 
   @Column()
-  status: string;
+  status: number;
 
   @ManyToOne(() => ColumnEntity, (column) => column.tasks)
   @JoinColumn({ name: "column" })

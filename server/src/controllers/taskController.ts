@@ -7,7 +7,7 @@ export class TaskController {
 
     const tasks = await taskRepository.find({
       where: {
-        status: id,
+        status: Number(id),
       },
       order: {
         order: "ASC",

@@ -29,7 +29,7 @@ export default function FormEditTask({ task, setModal }) {
           setModal(false);
 
           if (values.status !== task?.status) {
-            client.setQueryData(["tasks", parseInt(task?.status)], (prev) => {
+            client.setQueryData(["tasks", task?.status], (prev) => {
               let old = prev;
 
               let taskIndex = old.findIndex((x) => x.id === res.data.id);
@@ -40,7 +40,7 @@ export default function FormEditTask({ task, setModal }) {
               return old;
             });
 
-            client.setQueryData(["tasks", parseInt(values.status)], (prev) => {
+            client.setQueryData(["tasks", values.status], (prev) => {
               let old = prev;
 
               old.push(updatedTask);
@@ -48,7 +48,7 @@ export default function FormEditTask({ task, setModal }) {
               return old;
             });
           } else {
-            client.setQueryData(["tasks", parseInt(task?.status)], (prev) => {
+            client.setQueryData(["tasks", task?.status], (prev) => {
               let old = prev;
 
               let taskIndex = old.findIndex((x) => x.id === res.data.id);
@@ -80,12 +80,17 @@ export default function FormEditTask({ task, setModal }) {
         label="Nome da tarefa"
         placeHolder="Ex: Cuidar dos cães"
       />
-      <Form.Textarea
-        name="description"
-        label="Descrição da tarefa"
-        placeHolder="Ex: - Trocar água;  - Colocar ração; - Levar para passear;"
+      <Form.Editor name="description" label="Descrição da tarefa" />
+      <Form.Select
+        name="status"
+        options={columns?.data?.map((column) => {
+          return {
+            label: column.name,
+            value: column.id,
+          };
+        })}
+        label="Status"
       />
-      <Form.Select name="status" array={columns?.data} label="Status" />
       <Form.Submit>Editar tarefa</Form.Submit>
     </Form>
   );

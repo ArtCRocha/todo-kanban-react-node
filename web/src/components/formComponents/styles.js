@@ -91,3 +91,43 @@ export const TitleStyles = styled.h1`
     font-size: 24px;
   }
 `;
+
+export const selectStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    width: "100%",
+    height: "23px",
+    backgroundColor: "#fff",
+    border: "1px solid #e1e1e1",
+    outline: "none",
+    fontSize: "12px",
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: "#505050",
+    outline: "none",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    display: "flex",
+    flexDirection: "column",
+    fontSize: "12px",
+    background: "#ffffff",
+    color: "#505050",
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: "#fff",
+    border: "1px solid #e1e1e1",
+    borderRadius: "3px",
+  }),
+  multiValueRemove: (provided) => ({
+    ...provided,
+    color: "#8463a9",
+    ":hover": {
+      backgroundColor: "#765998d1",
+      color: "white",
+      cursor: "pointer",
+    },
+  }),
+};

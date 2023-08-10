@@ -5,6 +5,7 @@ import Textarea from "./textarea";
 import Select from "./select";
 import ButtonSubmit from "./buttonSubmit";
 import Title from "./title";
+import EditorForm from "./editor";
 
 export default function Form({
   children,
@@ -36,4 +37,5 @@ Form.Title = Title;
 Form.Input = Input;
 Form.Select = Select;
 Form.Textarea = Textarea;
+Form.Editor = EditorForm;
 Form.Submit = ButtonSubmit;

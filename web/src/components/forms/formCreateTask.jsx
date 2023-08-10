@@ -27,14 +27,13 @@ export default function FormCreateTask({ setModal }) {
         (res) => {
           setModal(false);
           client.setQueryData(
-            { queryKey: ["tasks", parseInt(formRef.current?.values?.status)] },
+            { queryKey: ["tasks", formRef.current?.values?.status] },
             (prev) => {
               let old = prev;
               old.push(res.data);
               return old;
             }
           );
-          
         },
         (err) => {
           console.dir(err);
@@ -58,14 +57,17 @@ export default function FormCreateTask({ setModal }) {
         label="Nome da tarefa"
         placeHolder="Ex: Cuidar dos cães"
       />
-      <Form.Textarea
-        name="description"
-        label="Descrição da tarefa"
-        placeHolder="Ex: - Trocar água;  - Colocar ração; - Levar para passear;
-
-        "
+      <Form.Editor name="description" label="Descrição da tarefa" />
+      <Form.Select
+        name="status"
+        options={columns?.data?.map((column) => {
+          return {
+            label: column.name,
+            value: column.id,
+          };
+        })}
+        label="Status"
       />
-      <Form.Select name="status" array={columns?.data} label="Status" />
       <Form.Submit>Criar tarefa</Form.Submit>
     </Form>
   );

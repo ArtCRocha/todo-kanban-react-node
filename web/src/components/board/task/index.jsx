@@ -13,6 +13,7 @@ import { useState } from "react";
 import Modal from "../../modal";
 import FormDeleteTask from "../../forms/formDeleteTask";
 import FormEditTask from "../../forms/formEditTask";
+import TaskDetail from "../../taskDetail";
 
 export default function TaskComponent({ task, index }) {
   const [modal, setModal] = useState(false);
@@ -26,8 +27,9 @@ export default function TaskComponent({ task, index }) {
             ref={provided.innerRef}
           >
             <ContainerText>
-              <TitleCard>{task.name}</TitleCard>
-              <DescriptionCard>{task.description}</DescriptionCard>
+              <TitleCard onClick={() => setModal("taskDetail")}>
+                {task.name}
+              </TitleCard>
             </ContainerText>
             <ContainerActions>
               <ContainerIcon>
@@ -57,6 +59,11 @@ export default function TaskComponent({ task, index }) {
       {modal === "edit" && (
         <Modal setModal={setModal}>
           <FormEditTask task={task} setModal={setModal} />
+        </Modal>
+      )}
+      {modal === "taskDetail" && (
+        <Modal setModal={setModal}>
+          <TaskDetail task={task} setModal={setModal} />
         </Modal>
       )}
     </>

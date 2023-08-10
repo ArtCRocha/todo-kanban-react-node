@@ -78,6 +78,8 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  z-index: 99;
 `;
 
 export const ContainerText = styled.div`
@@ -93,6 +95,12 @@ export const TitleCard = styled.p`
   font-weight: 500;
 
   margin-bottom: 5px;
+
+  cursor: pointer;
+
+  :hover {
+    color: #008ede;
+  }
 `;
 
 export const DescriptionCard = styled.p`
@@ -100,6 +108,8 @@ export const DescriptionCard = styled.p`
   color: #2a2a2a;
 
   font-weight: 400;
+
+  list-style-position: inside;
 `;
 
 export const ContainerActions = styled.div`
@@ -110,6 +120,8 @@ export const ContainerActions = styled.div`
 
   width: 100%;
   margin-top: 15px;
+
+  z-index: 99;
 `;
 
 export const ContainerIcon = styled.div`
