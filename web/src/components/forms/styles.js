@@ -26,3 +26,8 @@ export const MessageWrapper = styled.p`
 
   border-radius: 5px;
 `;
+
+export const TextDelete = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+`;

@@ -9,18 +9,12 @@ import FormDeleteColumn from "../forms/formDeleteColumn";
 import ColumnComponent from "./column";
 
 let movedItem;
-let itemIndex;
-let overItem;
-let sourceCol;
-let destinationCol;
 let newColumnOrder;
 export default function Board() {
   const [modal, setModal] = useState();
   const columns = useQuery({
     queryKey: ["columns"],
     queryFn: getAllColumns,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
   });
 
   const client = useQueryClient();

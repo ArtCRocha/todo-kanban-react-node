@@ -20,7 +20,7 @@ export const InputGroup = styled.div`
 
   flex-direction: column;
 
-  gap: 10px;
+  gap: 5px;
 `;
 
 export const InputStyle = styled.input`
@@ -32,6 +32,7 @@ export const InputStyle = styled.input`
   border: 1px solid #e1e1e1;
 
   color: #2a2a2a;
+  font-size: 12px;
 
   outline: none;
 `;
@@ -80,4 +81,13 @@ export const ButtonSubmitStyle = styled.button`
 
 export const Option = styled.option`
   font-size: 12px;
+`;
+
+export const TitleStyles = styled.h1`
+  font-size: 32px;
+  font-weight: bold;
+
+  @media (max-width: 795px) {
+    font-size: 24px;
+  }
 `;

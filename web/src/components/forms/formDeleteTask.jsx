@@ -5,14 +5,16 @@ import { MessageWrapper, TextAlert, TextDelete } from "./styles";
 import { useState } from "react";
 import { ContainerText } from "../board/styles";
 
-export default function FormDeleteColumn({ data, setModal }) {
+export default function FormDeleteTask({ task, setModal }) {
   const [message, setMessage] = useState();
   const client = useQueryClient();
 
   function handleSubmit() {
-    http.delete(`/columns/${data.id}/`).then(
+    http.delete(`/tasks/${task?.id}/`).then(
       (res) => {
-        client.invalidateQueries({ queryKey: ["columns"] });
+        client.invalidateQueries({
+          queryKey: ["tasks", parseInt(task?.status)],
+        });
 
         setModal(false);
 
@@ -30,16 +32,12 @@ export default function FormDeleteColumn({ data, setModal }) {
 
   return (
     <Form data={{}} onSubmit={handleSubmit}>
-      <Form.Title>Apagar coluna</Form.Title>
+      <Form.Title>Apagar tarefa</Form.Title>
       <ContainerText>
-        <TextAlert>Tem certeza que deseja apagar a coluna:</TextAlert>
-        <TextDelete>{data?.name} ?</TextDelete>
-        <TextAlert>
-          Todas as tarefas relacionadas á essa coluna também serão apagadas
-        </TextAlert>
+        <TextAlert>Tem certeza que deseja apagar a tarefa:</TextAlert>
+        <TextDelete>{task?.name} ?</TextDelete>
       </ContainerText>
-
-      <Form.Submit cancel>Deletar coluna</Form.Submit>
+      <Form.Submit cancel>Deletar tarefa</Form.Submit>
       {message && (
         <MessageWrapper color={message.color}>{message.title}</MessageWrapper>
       )}

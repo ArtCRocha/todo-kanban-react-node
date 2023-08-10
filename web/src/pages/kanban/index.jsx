@@ -40,13 +40,13 @@ export default function Kanban() {
       </Container>
       {modal === "column" && (
         <Modal setModal={setModal}>
-          <FormCreateColumn />
+          <FormCreateColumn setModal={setModal} />
         </Modal>
       )}
 
       {modal === "task" && (
         <Modal setModal={setModal}>
-          <FormCreateTask />
+          <FormCreateTask setModal={setModal} />
         </Modal>
       )}
     </>

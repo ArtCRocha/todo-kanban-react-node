@@ -4,7 +4,7 @@ import { Field } from "formik";
 export default function Input({ label, name, placeHolder }) {
   return (
     <Field name={name} placeholder={placeHolder}>
-      {({field, form, meta}) => (
+      {({ field, form, meta }) => (
         <InputGroup>
           <Label>{label}</Label>
           <InputStyle

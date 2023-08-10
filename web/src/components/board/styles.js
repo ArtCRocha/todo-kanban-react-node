@@ -67,11 +67,23 @@ export const Card = styled.div`
   background-color: #fff;
   width: 100%;
 
+  min-height: 110px;
+
   padding: 10px;
 
   border-radius: 5px;
 
   box-shadow: 5px 5px 7px #0002;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const ContainerText = styled.div`
+  display: flex;
+  flex-direction: ${(props) => props.direction || "column"};
+  gap: 5px;
 `;
 
 export const TitleCard = styled.p`
@@ -102,6 +114,4 @@ export const ContainerActions = styled.div`
 
 export const ContainerIcon = styled.div`
   cursor: pointer;
-
-  color: red;
 `;

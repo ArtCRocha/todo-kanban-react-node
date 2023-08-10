@@ -1,8 +1,8 @@
 import { ButtonSubmitStyle } from "./styles";
 
-export default function ButtonSubmit({ children, red }) {
+export default function ButtonSubmit({ children, cancel }) {
   return (
-    <ButtonSubmitStyle red={red} type="submit">
+    <ButtonSubmitStyle red={cancel} type="submit">
       {children}
     </ButtonSubmitStyle>
   );

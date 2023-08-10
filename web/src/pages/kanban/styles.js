@@ -6,6 +6,24 @@ export const Container = styled.div`
 
   padding: 20px;
   margin: 0 auto;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 10px;
+  }
 `;
 
 export const DivRow = styled.div`
@@ -64,6 +82,8 @@ export const DropDownOptions = styled.div`
   opacity: ${(props) => (props.show ? "1" : "0")};
 
   transition: 0.2s;
+
+  z-index: 1000;
 
   :hover {
     background-color: rgb(245, 245, 245);

@@ -22,9 +22,7 @@ export class Task {
   @Column()
   status: string;
 
-  @ManyToOne(() => ColumnEntity, (column) => column.tasks, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => ColumnEntity, (column) => column.tasks)
   @JoinColumn({ name: "column" })
   column: ColumnEntity;
 

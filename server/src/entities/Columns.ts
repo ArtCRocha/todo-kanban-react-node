@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   Generated,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Task } from "./Task";
@@ -15,7 +15,9 @@ export class ColumnEntity {
   @Column({ type: "text" })
   name: string;
 
-  @OneToMany(() => Task, (task) => task.column)
+  @OneToOne(() => Task, (task) => task.column, {
+    cascade: true,
+  })
   tasks: Task[];
 
   @Column()

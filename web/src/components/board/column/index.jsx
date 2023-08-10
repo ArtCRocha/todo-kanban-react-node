@@ -21,13 +21,9 @@ export default function ColumnComponent({ column, index }) {
   const { data } = useQuery({
     queryKey: ["tasks", column?.id],
     queryFn: getAllTasks,
-    retry: false,
     refetchOnMount: false,
-    retryOnMount: false,
     refetchOnWindowFocus: false,
   });
-
-  console.log(data);
 
   return (
     <>

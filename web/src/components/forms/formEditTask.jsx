@@ -4,7 +4,8 @@ import http from "../../services/http";
 import Form from "../formComponents";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function FormCreateTask({ setModal }) {
+let updatedTask;
+export default function FormEditTask({ task, setModal }) {
   const client = useQueryClient();
 
   const formRef = useRef();
@@ -18,7 +19,7 @@ export default function FormCreateTask({ setModal }) {
 
   function handleSubmit(values) {
     http
-      .post("/tasks/", {
+      .patch(`/tasks/${task?.id}`, {
         name: values.name,
         description: values.description,
         status: values.status,
@@ -26,15 +27,36 @@ export default function FormCreateTask({ setModal }) {
       .then(
         (res) => {
           setModal(false);
-          client.setQueryData(
-            { queryKey: ["tasks", parseInt(formRef.current?.values?.status)] },
-            (prev) => {
+
+          if (values.status !== task?.status) {
+            client.setQueryData(["tasks", parseInt(task?.status)], (prev) => {
               let old = prev;
-              old.push(res.data);
+
+              let taskIndex = old.findIndex((x) => x.id === res.data.id);
+              updatedTask = old[taskIndex];
+
+              old.splice(taskIndex, 1);
+
               return old;
-            }
-          );
-          
+            });
+
+            client.setQueryData(["tasks", parseInt(values.status)], (prev) => {
+              let old = prev;
+
+              old.push(updatedTask);
+
+              return old;
+            });
+          } else {
+            client.setQueryData(["tasks", parseInt(task?.status)], (prev) => {
+              let old = prev;
+
+              let taskIndex = old.findIndex((x) => x.id === res.data.id);
+              old[taskIndex] = res.data;
+
+              return old;
+            });
+          }
         },
         (err) => {
           console.dir(err);
@@ -46,13 +68,13 @@ export default function FormCreateTask({ setModal }) {
     <Form
       innerRef={(ref) => (formRef.current = ref)}
       data={{
-        name: "",
-        description: "",
-        status: columns?.data[0].id,
+        name: task?.name,
+        description: task?.description,
+        status: task?.status,
       }}
       onSubmit={handleSubmit}
     >
-      <Form.Title>Criar tarefa</Form.Title>
+      <Form.Title>Editar tarefa</Form.Title>
       <Form.Input
         name="name"
         label="Nome da tarefa"
@@ -61,12 +83,10 @@ export default function FormCreateTask({ setModal }) {
       <Form.Textarea
         name="description"
         label="Descrição da tarefa"
-        placeHolder="Ex: - Trocar água;  - Colocar ração; - Levar para passear;
-
-        "
+        placeHolder="Ex: - Trocar água;  - Colocar ração; - Levar para passear;"
       />
       <Form.Select name="status" array={columns?.data} label="Status" />
-      <Form.Submit>Criar tarefa</Form.Submit>
+      <Form.Submit>Editar tarefa</Form.Submit>
     </Form>
   );
 }
